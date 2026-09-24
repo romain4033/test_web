@@ -33,9 +33,9 @@ import { CONTACT, LEGAL } from '../data/site';
         <li>type d’événement et contenu de votre message.</li>
       </ul>
       <p>
-        Pour protéger le formulaire contre les abus, votre adresse IP est utilisée de façon temporaire afin de limiter
-        le nombre d’envois successifs. Elle n’est ni associée à votre message, ni conservée au-delà de quelques
-        minutes.
+        Pour protéger le formulaire contre les abus, votre adresse IP est utilisée afin de limiter le nombre d’envois
+        successifs. Elle n’est jamais enregistrée en clair : seule une empreinte irréversible (hachage) est conservée
+        pendant 10 minutes au maximum, sans lien avec le contenu de votre message.
       </p>
 
       <h2>Finalité et base légale</h2>
@@ -49,7 +49,8 @@ import { CONTACT, LEGAL } from '../data/site';
       <p>
         Vos messages sont transmis par e-mail à l’équipe d’{LEGAL.company}. Ils ne sont pas stockés sur le site. Ils
         transitent par nos sous-traitants techniques : l’hébergeur du site ({LEGAL.host.name}) et notre prestataire
-        d’envoi d’e-mails ([À COMPLÉTER]). Vos données ne sont jamais vendues ni cédées à des tiers.
+        d’envoi d’e-mails (Brevo, Sendinblue SAS, société française dont les données sont hébergées dans l’Union
+        européenne). Vos données ne sont jamais vendues ni cédées à des tiers.
       </p>
       <p>
         Certains de ces prestataires peuvent traiter des données en dehors de l’Union européenne. Ces transferts sont

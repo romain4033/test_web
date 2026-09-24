@@ -1,0 +1,17 @@
+# Configuration Cloudflare Pages (source de vérité pour les bindings).
+# Aucun secret ici : les clés sont définies dans le tableau de bord Cloudflare
+# (Settings → Variables and Secrets) ou via `npx wrangler pages secret put`.
+name = "elan-sport-events"
+pages_build_output_dir = "./dist"
+compatibility_date = "2026-09-01"
+
+# Espace KV utilisé pour la limitation de fréquence du formulaire.
+# Créer l'espace : npx wrangler kv namespace create RATE_LIMIT_KV
+# puis remplacer l'id ci-dessous (l'id n'est pas un secret).
+[[kv_namespaces]]
+binding = "RATE_LIMIT_KV"
+id = "REMPLACER_PAR_L_ID_DU_NAMESPACE_KV"
+
+[vars]
+CONTACT_TO_EMAIL = "contact@exemple-agence.fr"
+CONTACT_FROM_EMAIL = "site@exemple-agence.fr"

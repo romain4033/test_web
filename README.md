@@ -41,3 +41,26 @@ Le domaine de production se règle via la variable d’environnement `SITE_URL` 
 - Textes : `src/data/content.ts` (services, réalisations, équipe, valeurs, historique) et `src/data/site.ts` (coordonnées, informations légales). Les champs `[À COMPLÉTER]` doivent être renseignés avant la mise en ligne.
 - Photos : `src/assets/photos/`. Les visuels actuels sont **provisoires**. Pour les remplacer, déposez une photo haute définition (JPG, ≥ 1600 px de large, ≥ 2400 px pour `hero-accueil.jpg`) sous le **même nom de fichier** : Astro génère automatiquement les versions WebP compressées et responsives au build. Pensez à ajuster le texte alternatif (`imageAlt`) si la photo change de sujet.
 - Image de partage (Open Graph) : `public/og-default.jpg` (1200 × 630 px).
+
+## Formulaire de contact
+
+```
+functions/api/contact.ts   Fonction Cloudflare Pages (POST /api/contact)
+server/contact.ts          Logique : validation, honeypot, limitation de fréquence, envoi Brevo
+tests/contact.test.ts      Tests (npm test, runner natif de Node, sans dépendance)
+src/components/ContactForm.astro  Formulaire (fonctionne aussi sans JavaScript)
+```
+
+Chaîne de traitement d'une requête : origine vérifiée → type `application/x-www-form-urlencoded` uniquement (aucun upload) → corps ≤ 10 Ko → honeypot → configuration présente (sinon refus) → validation serveur → limitation de fréquence (3 envois / 10 min / IP, IP hachée avec un sel secret) → envoi Brevo en texte brut. Rien n'est stocké ni journalisé côté site.
+
+Variables d'environnement (à définir dans Cloudflare Pages → Settings → Variables and Secrets, **jamais dans le code**) :
+
+| Nom | Type | Rôle |
+| --- | --- | --- |
+| `BREVO_API_KEY` | secret | Clé API Brevo (droit « Transactional emails » uniquement) |
+| `RATE_LIMIT_SALT` | secret | Chaîne aléatoire (`openssl rand -hex 32`) pour hacher les IP |
+| `CONTACT_TO_EMAIL` | variable (`wrangler.toml`) | Adresse qui reçoit les demandes |
+| `CONTACT_FROM_EMAIL` | variable (`wrangler.toml`) | Expéditeur validé dans Brevo |
+| `RATE_LIMIT_KV` | binding KV (`wrangler.toml`) | Compteurs de limitation de fréquence |
+
+Test local de bout en bout : copier `.dev.vars.example` en `.dev.vars`, puis `npm run dev:functions` (http://localhost:8788).

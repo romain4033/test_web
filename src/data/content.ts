@@ -202,10 +202,5 @@ export const HISTORY = [
   { year: '2025', text: 'Une équipe de 8 permanents et plus de 80 000 participants accueillis depuis nos débuts.' },
 ];
 
-export const EVENT_TYPES = [
-  'Course ou trail',
-  'Tournoi multisport',
-  'Journée sportive d’entreprise',
-  'Team building sportif',
-  'Autre projet',
-] as const;
+// Liste unique partagée avec la validation serveur.
+export { EVENT_TYPES } from '../../server/contact.ts';

@@ -1,0 +1,310 @@
+---
+import Button from './Button.astro';
+import { EVENT_TYPES } from '../data/content';
+import { LIMITS, HONEYPOT_FIELD } from '../../server/contact.ts';
+---
+
+<!--
+  Fonctionne sans JavaScript (POST classique puis redirection vers /contact/merci/ ou /contact/erreur/).
+  Avec JavaScript, l'envoi se fait en arrière-plan avec des messages d'erreur par champ.
+  Toutes les règles sont revérifiées côté serveur (server/contact.ts).
+-->
+<form class="contact-form" action="/api/contact" method="post" novalidate data-contact-form>
+  <p class="contact-form__hint">Les champs marqués d’un <span aria-hidden="true">*</span><span class="visually-hidden">astérisque</span> sont obligatoires.</p>
+
+  <div class="field">
+    <label for="cf-name">Nom <span aria-hidden="true">*</span></label>
+    <input
+      id="cf-name"
+      name="name"
+      type="text"
+      autocomplete="name"
+      required
+      minlength={LIMITS.name.min}
+      maxlength={LIMITS.name.max}
+      aria-describedby="cf-name-error"
+    />
+    <p class="field__error" id="cf-name-error" data-error-for="name"></p>
+  </div>
+
+  <div class="field-row">
+    <div class="field">
+      <label for="cf-email">E-mail <span aria-hidden="true">*</span></label>
+      <input
+        id="cf-email"
+        name="email"
+        type="email"
+        autocomplete="email"
+        inputmode="email"
+        required
+        maxlength={LIMITS.email.max}
+        aria-describedby="cf-email-error"
+      />
+      <p class="field__error" id="cf-email-error" data-error-for="email"></p>
+    </div>
+
+    <div class="field">
+      <label for="cf-phone">Téléphone <span class="field__optional">(facultatif)</span></label>
+      <input
+        id="cf-phone"
+        name="phone"
+        type="tel"
+        autocomplete="tel"
+        inputmode="tel"
+        maxlength={LIMITS.phone.max}
+        pattern="\+?[0-9 .\(\)\-]{6,25}"
+        aria-describedby="cf-phone-error"
+      />
+      <p class="field__error" id="cf-phone-error" data-error-for="phone"></p>
+    </div>
+  </div>
+
+  <div class="field">
+    <label for="cf-event">Type d’événement <span aria-hidden="true">*</span></label>
+    <select id="cf-event" name="eventType" required aria-describedby="cf-event-error">
+      <option value="">Choisissez…</option>
+      {EVENT_TYPES.map((type) => <option value={type}>{type}</option>)}
+    </select>
+    <p class="field__error" id="cf-event-error" data-error-for="eventType"></p>
+  </div>
+
+  <div class="field">
+    <label for="cf-message">Votre projet <span aria-hidden="true">*</span></label>
+    <textarea
+      id="cf-message"
+      name="message"
+      rows="6"
+      required
+      minlength={LIMITS.message.min}
+      maxlength={LIMITS.message.max}
+      aria-describedby="cf-message-help cf-message-error"></textarea>
+    <p class="field__help" id="cf-message-help">Date envisagée, lieu, nombre de participants, objectifs…</p>
+    <p class="field__error" id="cf-message-error" data-error-for="message"></p>
+  </div>
+
+  <!-- Piège à robots : invisible pour les humains, ignoré par les lecteurs d'écran. -->
+  <div class="hp" aria-hidden="true">
+    <label for="cf-website">Ne pas remplir ce champ</label>
+    <input id="cf-website" name={HONEYPOT_FIELD} type="text" tabindex="-1" autocomplete="off" />
+  </div>
+
+  <p class="contact-form__privacy">
+    Vos données servent uniquement à répondre à votre demande et ne sont jamais cédées à des tiers.
+    En savoir plus : <a href="/confidentialite/">politique de confidentialité</a>.
+  </p>
+
+  <div class="contact-form__actions">
+    <Button type="submit" size="lg" data-submit>Envoyer ma demande</Button>
+  </div>
+
+  <div class="contact-form__status" role="status" aria-live="polite" tabindex="-1" data-status></div>
+</form>
+
+<script>
+  // Amélioration progressive — script externe bundlé (CSP : script-src 'self').
+  // Les messages sont insérés avec textContent uniquement (jamais innerHTML).
+  const form = document.querySelector<HTMLFormElement>('[data-contact-form]');
+
+  if (form) {
+    const status = form.querySelector<HTMLElement>('[data-status]')!;
+    const submit = form.querySelector<HTMLButtonElement>('[data-submit]')!;
+    const fields = ['name', 'email', 'phone', 'eventType', 'message'] as const;
+    type Field = (typeof fields)[number];
+
+    const clientMessages: Record<Field, string> = {
+      name: 'Indiquez votre nom.',
+      email: 'Indiquez une adresse e-mail valide.',
+      phone: 'Le numéro de téléphone n’est pas valide.',
+      eventType: 'Choisissez un type d’événement.',
+      message: 'Décrivez votre projet en quelques mots (10 caractères minimum).',
+    };
+
+    const control = (name: Field) =>
+      form.elements.namedItem(name) as HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
+
+    const setError = (name: Field, message: string) => {
+      const el = control(name);
+      const slot = form.querySelector<HTMLElement>(`[data-error-for="${name}"]`);
+      if (slot) slot.textContent = message;
+      if (message) el.setAttribute('aria-invalid', 'true');
+      else el.removeAttribute('aria-invalid');
+    };
+
+    const setStatus = (message: string, kind: 'success' | 'error' | '') => {
+      status.textContent = message;
+      status.dataset.kind = kind;
+    };
+
+    const validateClient = (): Field | null => {
+      let first: Field | null = null;
+      for (const name of fields) {
+        const el = control(name);
+        const invalid = !el.checkValidity() || (el.required && el.value.trim() === '');
+        setError(name, invalid ? clientMessages[name] : '');
+        if (invalid && !first) first = name;
+      }
+      return first;
+    };
+
+    // Efface l'erreur d'un champ dès qu'il redevient valide, pendant la saisie.
+    // (Pas de revalidation au blur : le décalage de mise en page ferait rater le clic sur « Envoyer ».)
+    for (const name of fields) {
+      const el = control(name);
+      const clearIfValid = () => {
+        if (el.getAttribute('aria-invalid') === 'true' && el.checkValidity() && !(el.required && el.value.trim() === '')) {
+          setError(name, '');
+        }
+      };
+      el.addEventListener('input', clearIfValid);
+      el.addEventListener('change', clearIfValid);
+    }
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      setStatus('', '');
+
+      const firstInvalid = validateClient();
+      if (firstInvalid) {
+        control(firstInvalid).focus();
+        return;
+      }
+
+      submit.disabled = true;
+      submit.textContent = 'Envoi en cours…';
+
+      try {
+        const response = await fetch(form.action, {
+          method: 'POST',
+          headers: { Accept: 'application/json' },
+          body: new URLSearchParams(new FormData(form) as unknown as Record<string, string>),
+          credentials: 'same-origin',
+        });
+        const data = (await response.json()) as {
+          status: string;
+          message: string;
+          errors?: Partial<Record<Field, string>>;
+        };
+
+        if (data.status === 'success') {
+          form.reset();
+          fields.forEach((name) => setError(name, ''));
+          setStatus(data.message, 'success');
+        } else {
+          if (data.errors) {
+            for (const name of fields) setError(name, data.errors[name] ?? '');
+            const first = fields.find((name) => data.errors?.[name]);
+            if (first) control(first).focus();
+          }
+          setStatus(data.message, 'error');
+        }
+      } catch {
+        setStatus('Impossible d’envoyer le message pour le moment. Vérifiez votre connexion et réessayez.', 'error');
+      } finally {
+        submit.disabled = false;
+        submit.textContent = 'Envoyer ma demande';
+        if (status.textContent) status.focus();
+      }
+    });
+  }
+</script>
+
+<style>
+  .contact-form {
+    display: grid;
+    gap: var(--space-5);
+  }
+  .contact-form__hint,
+  .contact-form__privacy,
+  .field__help {
+    font-size: var(--fs-sm);
+    color: var(--color-muted);
+  }
+  .field-row {
+    display: grid;
+    gap: var(--space-5);
+  }
+  @media (min-width: 40rem) {
+    .field-row {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .field {
+    display: grid;
+    gap: var(--space-2);
+    align-content: start;
+  }
+  .field label {
+    font-weight: 700;
+  }
+  .field__optional {
+    font-weight: 400;
+    color: var(--color-muted);
+  }
+  .field input,
+  .field select,
+  .field textarea {
+    width: 100%;
+    min-height: 3rem;
+    padding: var(--space-3) var(--space-4);
+    border: 2px solid #9ca3af; /* contraste 3:1 minimum pour les bordures de champ */
+    border-radius: var(--radius);
+    background: var(--color-bg);
+    transition: border-color var(--transition), box-shadow var(--transition);
+  }
+  .field textarea {
+    resize: vertical;
+    min-height: 9rem;
+  }
+  .field input:hover,
+  .field select:hover,
+  .field textarea:hover {
+    border-color: var(--color-ink);
+  }
+  .field input:focus-visible,
+  .field select:focus-visible,
+  .field textarea:focus-visible {
+    outline: none;
+    border-color: var(--color-ink);
+    box-shadow: 0 0 0 3px var(--color-accent);
+  }
+  .field [aria-invalid='true'] {
+    border-color: #b91c1c;
+  }
+  .field__error {
+    color: #b91c1c; /* 6.47:1 sur blanc */
+    font-size: var(--fs-sm);
+    font-weight: 600;
+  }
+  .field__error:empty {
+    display: none;
+  }
+  /* Honeypot : hors écran plutôt que display:none (certains robots l'ignorent sinon) */
+  .hp {
+    position: absolute;
+    left: -10000px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+  .contact-form__status:empty {
+    display: none;
+  }
+  .contact-form__status {
+    padding: var(--space-4) var(--space-5);
+    border-radius: var(--radius);
+    font-weight: 600;
+  }
+  .contact-form__status[data-kind='success'] {
+    background: #ecfdf5;
+    color: #065f46;
+    border-left: 4px solid #059669;
+  }
+  .contact-form__status[data-kind='error'] {
+    background: #fef2f2;
+    color: #991b1b;
+    border-left: 4px solid #dc2626;
+  }
+  .contact-form__status:focus {
+    outline: none;
+  }
+</style>

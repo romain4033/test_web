@@ -1,0 +1,4 @@
+# Copier ce fichier en .dev.vars (ignoré par git) pour le développement local
+# avec `npm run dev:functions`. Ne jamais committer de vraie clé.
+BREVO_API_KEY=cle-api-brevo-de-test
+RATE_LIMIT_SALT=chaine-aleatoire-longue-generee-avec-openssl-rand-hex-32

@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/Hero.astro';
 import Section from '../components/Section.astro';
+import ContactForm from '../components/ContactForm.astro';
 import { CONTACT } from '../data/site';
 ---
 
@@ -19,8 +20,7 @@ import { CONTACT } from '../data/site';
     <div class="contact">
       <div class="contact__form">
         <h2 id="formulaire-titre">Envoyez-nous un message</h2>
-        <!-- Formulaire sécurisé : étape 4 -->
-        <p class="placeholder">Le formulaire de contact sécurisé sera ajouté à l’étape 4.</p>
+        <ContactForm />
       </div>
 
       <aside class="contact__info" aria-labelledby="coordonnees-titre">
@@ -64,12 +64,6 @@ import { CONTACT } from '../data/site';
   .contact h2 {
     font-size: var(--fs-xl);
     margin-bottom: var(--space-5);
-  }
-  .placeholder {
-    padding: var(--space-6);
-    border: 2px dashed var(--color-border);
-    border-radius: var(--radius-lg);
-    color: var(--color-muted);
   }
   .contact__info {
     padding: var(--space-6);

@@ -1,0 +1,25 @@
+---
+// Page affichée en cas d'erreur d'envoi sans JavaScript.
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Hero from '../../components/Hero.astro';
+import Section from '../../components/Section.astro';
+import Button from '../../components/Button.astro';
+import { CONTACT } from '../../data/site';
+---
+
+<BaseLayout title="Message non envoyé" description="Votre message n’a pas pu être envoyé." noindex>
+  <Hero eyebrow="Contact" title="Votre message n’a pas pu être envoyé" />
+  <Section narrow>
+    <div class="stack">
+      <p class="lead">
+        Un champ est peut-être incomplet, ou plusieurs messages ont été envoyés en peu de temps. Merci de vérifier
+        votre saisie et de réessayer.
+      </p>
+      <p>
+        Vous pouvez aussi nous écrire directement à <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a> ou nous
+        appeler au <a href={`tel:${CONTACT.phoneHref}`}>{CONTACT.phone}</a>.
+      </p>
+      <Button href="/contact/">Revenir au formulaire</Button>
+    </div>
+  </Section>
+</BaseLayout>
