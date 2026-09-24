@@ -1,0 +1,80 @@
+---
+import { SITE, NAV_LINKS, LEGAL_LINKS } from '../data/site';
+
+interface Props {
+  /** Titre unique de la page (sans le nom du site). */
+  title: string;
+  /** Meta description unique (≈ 150–160 caractères). */
+  description?: string;
+  /** Image Open Graph (chemin absolu depuis /public ou URL importée). */
+  ogImage?: string;
+  /** Exclure la page de l'indexation (ex. 404). */
+  noindex?: boolean;
+}
+
+const { title, description = SITE.defaultDescription, ogImage = '/og-default.jpg', noindex = false } =
+  Astro.props;
+
+const fullTitle = Astro.url.pathname === '/' ? `${SITE.name} — ${SITE.tagline}` : `${title} | ${SITE.name}`;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImageUrl = new URL(ogImage, Astro.site);
+const currentPath = Astro.url.pathname;
+---
+
+<!doctype html>
+<html lang={SITE.lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex" />}
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content={SITE.locale} />
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+  </head>
+  <body>
+    <a class="skip-link" href="#contenu">Aller au contenu</a>
+
+    <header class="site-header">
+      <a class="logo" href="/">{SITE.name}</a>
+      <nav aria-label="Navigation principale">
+        <ul>
+          {
+            NAV_LINKS.map((link) => (
+              <li>
+                <a href={link.href} aria-current={currentPath === link.href ? 'page' : undefined}>
+                  {link.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+    </header>
+
+    <main id="contenu" tabindex="-1">
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <p>© {new Date().getFullYear()} {SITE.name}</p>
+      <nav aria-label="Liens légaux">
+        <ul>
+          {LEGAL_LINKS.map((link) => <li><a href={link.href}>{link.label}</a></li>)}
+        </ul>
+      </nav>
+    </footer>
+  </body>
+</html>

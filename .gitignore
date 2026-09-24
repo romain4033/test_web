@@ -1,0 +1,19 @@
+# build
+dist/
+.astro/
+
+# dépendances
+node_modules/
+
+# Cloudflare / Wrangler
+.wrangler/
+.dev.vars
+
+# variables d'environnement (ne jamais committer de secrets)
+.env
+.env.*
+!.env.example
+
+# logs & OS
+npm-debug.log*
+.DS_Store
