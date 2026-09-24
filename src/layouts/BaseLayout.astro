@@ -3,6 +3,8 @@ import { SITE } from '../data/site';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import '../styles/global.css';
+// Police principale préchargée (évite un décalage de mise en page au chargement).
+import interLatin from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
 
 interface Props {
   /** Titre unique de la page (sans le nom du site). */
@@ -44,6 +46,8 @@ const ogImageUrl = new URL(ogImage, Astro.site);
     <meta property="og:image" content={ogImageUrl} />
     <meta name="twitter:card" content="summary_large_image" />
 
+    <link rel="preload" href={interLatin} as="font" type="font/woff2" crossorigin />
+    <noscript><link rel="stylesheet" href="/nojs.css" /></noscript>
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="sitemap" href="/sitemap-index.xml" />
   </head>

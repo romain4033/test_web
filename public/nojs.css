@@ -1,0 +1,7 @@
+/* Chargé uniquement sans JavaScript (<noscript>) : le menu reste accessible sur mobile. */
+.nav-toggle {
+  display: none !important;
+}
+.site-nav {
+  display: block !important;
+}

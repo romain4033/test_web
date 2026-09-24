@@ -12,15 +12,9 @@ const isCurrent = (href: string) => (href === '/' ? currentPath === '/' : curren
       <Logo />
     </a>
 
-    <!-- Sans JavaScript, le menu reste visible (amélioration progressive). -->
-    <button
-      class="nav-toggle"
-      type="button"
-      aria-expanded="false"
-      aria-controls="nav-principale"
-      hidden
-      data-nav-toggle
-    >
+    <!-- Menu replié en CSS dès le premier affichage (pas de décalage de mise en page).
+         Sans JavaScript, public/nojs.css (chargé via <noscript>) le rend visible. -->
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-principale" data-nav-toggle>
       <span class="nav-toggle__bars" aria-hidden="true"></span>
       <span class="visually-hidden">Menu</span>
     </button>
@@ -59,12 +53,6 @@ const isCurrent = (href: string) => (href === '/' ? currentPath === '/' : curren
       nav.classList.toggle('is-open', open);
     };
 
-    const sync = () => {
-      toggle.hidden = mq.matches;
-      nav.classList.toggle('is-collapsible', !mq.matches);
-      if (mq.matches) setOpen(false);
-    };
-
     toggle.addEventListener('click', () => setOpen(toggle.getAttribute('aria-expanded') !== 'true'));
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
@@ -72,8 +60,8 @@ const isCurrent = (href: string) => (href === '/' ? currentPath === '/' : curren
         toggle.focus();
       }
     });
-    mq.addEventListener('change', sync);
-    sync();
+    // Referme le menu si l'écran passe en format large.
+    mq.addEventListener('change', () => mq.matches && setOpen(false));
   }
 </script>
 
@@ -140,9 +128,6 @@ const isCurrent = (href: string) => (href === '/' ? currentPath === '/' : curren
     background: transparent;
     cursor: pointer;
   }
-  .nav-toggle[hidden] {
-    display: none;
-  }
   .nav-toggle__bars,
   .nav-toggle__bars::before,
   .nav-toggle__bars::after {
@@ -178,27 +163,36 @@ const isCurrent = (href: string) => (href === '/' ? currentPath === '/' : curren
     transform: translateY(-7px) rotate(-45deg);
   }
 
-  .site-nav.is-collapsible {
-    display: none;
-    flex-basis: 100%;
-    padding-bottom: var(--space-4);
+  /* Écrans larges : bouton masqué, menu toujours visible */
+  @media (min-width: 56rem) {
+    .nav-toggle {
+      display: none;
+    }
   }
-  .site-nav.is-collapsible.is-open {
-    display: block;
-  }
-  .site-nav.is-collapsible ul {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  .site-nav.is-collapsible a {
-    width: 100%;
-    padding-inline: var(--space-4);
-  }
-  .site-nav.is-collapsible a[aria-current='page']:not(.site-nav__cta) {
-    box-shadow: inset 4px 0 0 var(--color-accent);
-  }
-  .site-nav.is-collapsible .site-nav__cta {
-    justify-content: center;
-    margin-top: var(--space-2);
+  /* Petits écrans : menu replié, ouvert par le bouton */
+  @media (max-width: 55.99rem) {
+    .site-nav {
+      display: none;
+      flex-basis: 100%;
+      padding-bottom: var(--space-4);
+    }
+    .site-nav.is-open {
+      display: block;
+    }
+    .site-nav ul {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .site-nav a {
+      width: 100%;
+      padding-inline: var(--space-4);
+    }
+    .site-nav a[aria-current='page']:not(.site-nav__cta) {
+      box-shadow: inset 4px 0 0 var(--color-accent);
+    }
+    .site-nav .site-nav__cta {
+      justify-content: center;
+      margin-top: var(--space-2);
+    }
   }
 </style>

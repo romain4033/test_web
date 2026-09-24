@@ -23,8 +23,8 @@ export default defineConfig({
   },
   integrations: [
     sitemap({
-      // Pages exclues du sitemap (404, démonstration, confirmations du formulaire).
-      filter: (page) => !['/404', '/styleguide', '/contact/merci', '/contact/erreur'].some((p) => page.includes(p)),
+      // Pages exclues du sitemap (404, confirmations du formulaire).
+      filter: (page) => !['/404', '/contact/merci', '/contact/erreur'].some((p) => page.includes(p)),
     }),
   ],
 });

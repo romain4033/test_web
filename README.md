@@ -2,6 +2,8 @@
 
 Site statique (Astro) pour une agence d’événementiel sportif. Aucun compte, aucun paiement, aucune base de données.
 
+➡ **Mise en ligne : voir [DEPLOIEMENT.md](DEPLOIEMENT.md).**
+
 ## Prérequis
 
 - Node.js ≥ 22.12 (`.nvmrc`)
@@ -14,6 +16,8 @@ Site statique (Astro) pour une agence d’événementiel sportif. Aucun compte, 
 | `npm run dev`     | Serveur de développement (localhost:4321) |
 | `npm run build`   | Génère le site statique dans `dist/`     |
 | `npm run preview` | Prévisualise le build                    |
+| `npm test`        | Tests du formulaire de contact           |
+| `npm run dev:functions` | Site + fonction de contact en local (Wrangler, :8788) |
 
 ## Structure
 

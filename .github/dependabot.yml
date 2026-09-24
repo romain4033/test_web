@@ -1,0 +1,14 @@
+# Mises à jour automatiques des dépendances (une PR par semaine, regroupées).
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      dependances:
+        patterns: ['*']
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
