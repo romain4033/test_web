@@ -176,3 +176,14 @@ test('erreur du prestataire e-mail : message générique (500)', async () => {
   assert.equal(body.status, 'error');
   assert.equal(body.errors, undefined);
 });
+
+// --- En-têtes de sécurité des Functions --------------------------------------
+test('les réponses de la Function portent les en-têtes de sécurité', async () => {
+  const { onRequestPost, onRequest } = await import('../functions/api/contact.ts');
+  for (const res of [await onRequestPost({ request: makeRequest(valid, { origin: '' }), env: makeEnv() }), onRequest()]) {
+    assert.match(res.headers.get('content-security-policy') ?? '', /default-src 'none'/);
+    assert.equal(res.headers.get('x-frame-options'), 'DENY');
+    assert.equal(res.headers.get('x-content-type-options'), 'nosniff');
+    assert.match(res.headers.get('strict-transport-security') ?? '', /max-age=63072000/);
+  }
+});

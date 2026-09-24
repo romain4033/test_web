@@ -1,0 +1,33 @@
+# En-têtes HTTP de sécurité — Cloudflare Pages (syntaxe identique sur Netlify).
+# ⚠ Ce fichier ne s'applique PAS aux réponses des Functions (/api/*) :
+#   ces en-têtes sont ajoutés dans le code (server/security-headers.ts).
+#
+# CSP : tout est servi depuis le site lui-même, aucun script/style inline, aucun tiers.
+#   default-src 'none'        tout est interdit par défaut
+#   script/style/img/font     uniquement depuis le domaine du site
+#   connect-src 'self'        fetch() du formulaire vers /api/contact
+#   form-action 'self'        le formulaire ne peut être posté que vers le site
+#   frame-ancestors 'none'    interdit l'affichage du site dans une iframe (clickjacking)
+#   base-uri 'none'           empêche le détournement des URL relatives
+#   upgrade-insecure-requests toute ressource http:// est chargée en https://
+
+/*
+  Content-Security-Policy: default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'; manifest-src 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'none'; upgrade-insecure-requests
+  Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: accelerometer=(), autoplay=(), browsing-topics=(), camera=(), display-capture=(), encrypted-media=(), fullscreen=(), geolocation=(), gyroscope=(), hid=(), idle-detection=(), magnetometer=(), microphone=(), midi=(), payment=(), picture-in-picture=(), publickey-credentials-get=(), screen-wake-lock=(), serial=(), usb=(), xr-spatial-tracking=()
+  Cross-Origin-Opener-Policy: same-origin
+  Cross-Origin-Resource-Policy: same-origin
+  X-Permitted-Cross-Domain-Policies: none
+
+# Fichiers générés par Astro : nom contenant un hash → cache long et immuable.
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Les URL de prévisualisation *.pages.dev ne doivent pas être indexées (contenu dupliqué).
+https://:project.pages.dev/*
+  X-Robots-Tag: noindex
+https://:version.:project.pages.dev/*
+  X-Robots-Tag: noindex

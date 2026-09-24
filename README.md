@@ -64,3 +64,10 @@ Variables d'environnement (à définir dans Cloudflare Pages → Settings → Va
 | `RATE_LIMIT_KV` | binding KV (`wrangler.toml`) | Compteurs de limitation de fréquence |
 
 Test local de bout en bout : copier `.dev.vars.example` en `.dev.vars`, puis `npm run dev:functions` (http://localhost:8788).
+
+## En-têtes de sécurité
+
+- Pages statiques : `public/_headers` (copié dans `dist/` au build, lu par Cloudflare Pages et Netlify).
+- Réponses de l'API : `server/security-headers.ts` (le fichier `_headers` ne s'applique pas aux Functions).
+
+La CSP interdit tout script ou style inline et toute ressource tierce. Si vous ajoutez un jour un service externe (carte, vidéo, statistiques…), il faudra l'autoriser explicitement dans la CSP.
