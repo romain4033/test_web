@@ -1,12 +1,141 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/Hero.astro';
+import Section from '../components/Section.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import Button from '../components/Button.astro';
+import Card from '../components/Card.astro';
+import Stat from '../components/Stat.astro';
+import StatList from '../components/StatList.astro';
+import CtaBanner from '../components/CtaBanner.astro';
+import { SERVICES, STATS, REALISATIONS } from '../data/content';
+import heroImage from '../assets/photos/hero-accueil.jpg';
+
+const arguments_ = [
+  { title: 'Clé en main', text: 'Un interlocuteur unique, de la première idée au dernier participant.' },
+  { title: 'Sécurité maîtrisée', text: 'Autorisations, secours, assurances : nous connaissons les règles et les appliquons.' },
+  { title: 'Sur mesure', text: 'Chaque format est construit autour de vos objectifs, de votre public et de votre budget.' },
+];
 ---
 
 <BaseLayout
   title="Accueil"
   description="Élan Sport Events conçoit et organise vos événements sportifs sur mesure : courses, trails, tournois, journées d’entreprise et team building."
 >
-  <Hero title="Des événements sportifs qui font vibrer vos équipes" size="home" />
-  <!-- Sections (étape 3) : accroche/hero, présentation, aperçu des services, chiffres clés, appel à l’action -->
+  <Hero
+    size="home"
+    eyebrow="Agence d’événementiel sportif"
+    text="Courses, tournois, journées d’entreprise, team building : nous imaginons et orchestrons des événements sportifs sûrs, fédérateurs et inoubliables."
+    image={heroImage}
+    imageAlt="Départ d’une course en montagne, des centaines de coureurs s’élancent sous l’arche"
+  >
+    <Fragment slot="title">Des événements sportifs qui font <span class="highlight">vibrer</span> vos équipes</Fragment>
+    <Button href="/contact/" size="lg">Demander un devis</Button>
+    <Button href="/services/" variant="ghost" size="lg">Découvrir nos services</Button>
+  </Hero>
+
+  <Section labelledby="presentation-titre">
+    <div class="intro">
+      <SectionHeading
+        id="presentation-titre"
+        eyebrow="L’agence"
+        title="Le sport comme moteur de vos événements"
+        intro="Depuis 2014, Élan Sport Events accompagne collectivités, associations et entreprises dans l’organisation d’événements sportifs. Notre équipe réunit des professionnels de l’événementiel et des sportifs passionnés : nous savons ce qui fait une belle course, un tournoi réussi ou une journée d’entreprise dont on parle encore des mois plus tard."
+      />
+      <ul role="list" class="arguments">
+        {
+          arguments_.map((a) => (
+            <li>
+              <h3>{a.title}</h3>
+              <p>{a.text}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </Section>
+
+  <Section tone="muted" labelledby="services-titre">
+    <SectionHeading
+      id="services-titre"
+      eyebrow="Nos services"
+      title="Quatre expertises, une même énergie"
+      intro="Que vous prépariez une course ouverte au public ou un moment fort pour vos collaborateurs, nous avons le format qu’il vous faut."
+    />
+    <div class="grid grid--4">
+      {
+        SERVICES.map((s) => (
+          <Card title={s.title} text={s.summary} href={`/services/#${s.id}`} image={s.image} imageAlt={s.imageAlt} />
+        ))
+      }
+    </div>
+    <p class="more"><Button href="/services/" variant="secondary">Voir tous nos services</Button></p>
+  </Section>
+
+  <Section tone="dark" labelledby="chiffres-titre">
+    <SectionHeading id="chiffres-titre" eyebrow="En chiffres" title="Une expérience qui fait la différence" />
+    <StatList>
+      {STATS.map((s) => <Stat value={s.value} label={s.label} />)}
+    </StatList>
+  </Section>
+
+  <Section labelledby="realisations-titre">
+    <SectionHeading
+      id="realisations-titre"
+      eyebrow="Réalisations"
+      title="Ils nous ont fait confiance"
+      intro="Un aperçu des derniers événements que nous avons eu le plaisir d’organiser."
+    />
+    <div class="grid">
+      {
+        REALISATIONS.slice(0, 3).map((r) => (
+          <Card tag={r.category} title={r.title} text={r.description} image={r.image} imageAlt={r.imageAlt} href="/realisations/" />
+        ))
+      }
+    </div>
+    <p class="more"><Button href="/realisations/" variant="ghost">Toutes nos réalisations</Button></p>
+  </Section>
+
+  <CtaBanner
+    title="Un projet d’événement sportif ?"
+    text="Parlez-nous de vos objectifs : nous revenons vers vous sous 48 h avec une première proposition."
+  />
 </BaseLayout>
+
+<style>
+  .intro {
+    display: grid;
+    gap: var(--space-7);
+  }
+  .intro :global(.section-heading) {
+    margin-bottom: 0;
+  }
+  .arguments {
+    display: grid;
+    gap: var(--space-5);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  }
+  .arguments li {
+    display: grid;
+    gap: var(--space-2);
+    padding: var(--space-5);
+    border-radius: var(--radius-lg);
+    background: var(--color-accent-tint);
+  }
+  .arguments p {
+    color: var(--color-muted);
+  }
+  .more {
+    margin-top: var(--space-7);
+    text-align: center;
+  }
+  @media (min-width: 64rem) {
+    .intro {
+      grid-template-columns: 1.1fr 1fr;
+      align-items: center;
+    }
+    .arguments {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

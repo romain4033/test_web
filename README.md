@@ -35,3 +35,9 @@ public/                 Fichiers servis tels quels
 ```
 
 Le domaine de production se règle via la variable d’environnement `SITE_URL` (utilisée pour les URL canoniques, Open Graph, le sitemap et robots.txt).
+
+## Contenu et photos
+
+- Textes : `src/data/content.ts` (services, réalisations, équipe, valeurs, historique) et `src/data/site.ts` (coordonnées, informations légales). Les champs `[À COMPLÉTER]` doivent être renseignés avant la mise en ligne.
+- Photos : `src/assets/photos/`. Les visuels actuels sont **provisoires**. Pour les remplacer, déposez une photo haute définition (JPG, ≥ 1600 px de large, ≥ 2400 px pour `hero-accueil.jpg`) sous le **même nom de fichier** : Astro génère automatiquement les versions WebP compressées et responsives au build. Pensez à ajuster le texte alternatif (`imageAlt`) si la photo change de sujet.
+- Image de partage (Open Graph) : `public/og-default.jpg` (1200 × 630 px).

@@ -25,7 +25,23 @@ export const LEGAL_LINKS = [
 export const CONTACT = {
   email: 'contact@exemple-agence.fr',
   phone: '04 00 00 00 00',
+  hours: 'Du lundi au vendredi, 9 h – 18 h',
   phoneHref: '+33400000000',
   addressLine1: '12 rue du Stade',
   addressLine2: '69000 Lyon',
+} as const;
+
+// Informations légales provisoires (à compléter avant la mise en ligne).
+export const LEGAL = {
+  company: 'Élan Sport Events SAS',
+  capital: '[À COMPLÉTER] €',
+  siret: '[À COMPLÉTER]',
+  rcs: 'RCS Lyon [À COMPLÉTER]',
+  vat: 'FR [À COMPLÉTER]',
+  director: '[Nom du directeur de la publication]',
+  host: {
+    name: 'Cloudflare, Inc.',
+    address: '101 Townsend Street, San Francisco, CA 94107, États-Unis',
+    website: 'https://www.cloudflare.com',
+  },
 } as const;

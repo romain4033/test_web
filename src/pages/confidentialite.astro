@@ -1,12 +1,92 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/Hero.astro';
+import Section from '../components/Section.astro';
+import { CONTACT, LEGAL } from '../data/site';
 ---
 
 <BaseLayout
   title="Politique de confidentialité"
   description="Politique de confidentialité d’Élan Sport Events : données collectées via le formulaire de contact, finalités, durée de conservation et vos droits (RGPD)."
 >
-  <Hero title="Politique de confidentialité" />
-  <!-- Contenu RGPD (étape 3) -->
+  <Hero title="Politique de confidentialité" text="Dernière mise à jour : septembre 2026" />
+
+  <Section narrow>
+    <div class="prose">
+      <p>
+        Nous accordons une grande importance à la protection de vos données personnelles. Ce site a été conçu pour
+        en collecter le moins possible : il ne comporte ni compte utilisateur, ni paiement en ligne, ni cookie, ni
+        outil de mesure d’audience.
+      </p>
+
+      <h2>Responsable du traitement</h2>
+      <p>
+        {LEGAL.company}, {CONTACT.addressLine1}, {CONTACT.addressLine2} — contact :
+        <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>.
+      </p>
+
+      <h2>Données collectées</h2>
+      <p>Les seules données collectées sont celles que vous saisissez dans le formulaire de contact :</p>
+      <ul>
+        <li>nom et e-mail (obligatoires) ;</li>
+        <li>numéro de téléphone (facultatif) ;</li>
+        <li>type d’événement et contenu de votre message.</li>
+      </ul>
+      <p>
+        Pour protéger le formulaire contre les abus, votre adresse IP est utilisée de façon temporaire afin de limiter
+        le nombre d’envois successifs. Elle n’est ni associée à votre message, ni conservée au-delà de quelques
+        minutes.
+      </p>
+
+      <h2>Finalité et base légale</h2>
+      <p>
+        Vos données servent uniquement à répondre à votre demande et, le cas échéant, à établir une proposition
+        commerciale. Ce traitement repose sur les mesures précontractuelles prises à votre demande (article 6.1.b du
+        RGPD) et, pour la protection anti-abus, sur notre intérêt légitime à sécuriser le site (article 6.1.f).
+      </p>
+
+      <h2>Destinataires</h2>
+      <p>
+        Vos messages sont transmis par e-mail à l’équipe d’{LEGAL.company}. Ils ne sont pas stockés sur le site. Ils
+        transitent par nos sous-traitants techniques : l’hébergeur du site ({LEGAL.host.name}) et notre prestataire
+        d’envoi d’e-mails ([À COMPLÉTER]). Vos données ne sont jamais vendues ni cédées à des tiers.
+      </p>
+      <p>
+        Certains de ces prestataires peuvent traiter des données en dehors de l’Union européenne. Ces transferts sont
+        encadrés par des garanties appropriées (décision d’adéquation du Data Privacy Framework UE–États-Unis ou
+        clauses contractuelles types de la Commission européenne).
+      </p>
+
+      <h2>Durée de conservation</h2>
+      <p>
+        Les échanges sont conservés dans notre messagerie pendant 3 ans au maximum à compter de notre dernier contact,
+        puis supprimés. Si une relation contractuelle s’engage, les données sont conservées pendant la durée légale
+        applicable.
+      </p>
+
+      <h2>Cookies</h2>
+      <p>
+        Ce site ne dépose aucun cookie, ni de mesure d’audience, ni publicitaire, ni de réseau social. Aucun bandeau de
+        consentement n’est donc nécessaire.
+      </p>
+
+      <h2>Sécurité</h2>
+      <p>
+        Le site est servi exclusivement en HTTPS, protégé par des en-têtes de sécurité stricts, et le formulaire est
+        validé côté serveur. Aucun fichier ne peut être envoyé par les visiteurs.
+      </p>
+
+      <h2>Vos droits</h2>
+      <p>
+        Conformément au RGPD et à la loi « Informatique et Libertés », vous disposez d’un droit d’accès, de
+        rectification, d’effacement, de limitation, d’opposition et de portabilité de vos données. Pour les exercer,
+        écrivez-nous à <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>. Nous vous répondrons dans un délai
+        d’un mois.
+      </p>
+      <p>
+        Si vous estimez que vos droits ne sont pas respectés, vous pouvez introduire une réclamation auprès de la CNIL
+        (<a href="https://www.cnil.fr" rel="noopener noreferrer">cnil.fr</a>).
+      </p>
+    </div>
+  </Section>
 </BaseLayout>

@@ -1,12 +1,165 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/Hero.astro';
+import Section from '../components/Section.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import CtaBanner from '../components/CtaBanner.astro';
+import { HISTORY, VALUES, TEAM } from '../data/content';
+import teamImage from '../assets/photos/a-propos-equipe.jpg';
+
+const initials = (name: string) =>
+  name
+    .split(' ')
+    .map((part) => part[0])
+    .join('');
 ---
 
 <BaseLayout
   title="À propos"
   description="L’histoire, l’équipe et les valeurs d’Élan Sport Events, agence spécialisée dans l’organisation d’événements sportifs."
 >
-  <Hero title="À propos" />
-  <!-- Sections (étape 3) : histoire, équipe, valeurs -->
+  <Hero
+    eyebrow="À propos"
+    title="Des passionnés de sport au service de vos événements"
+    text="Une équipe lyonnaise qui met son expertise terrain au service de projets sportifs partout en France."
+    image={teamImage}
+    imageAlt="L’équipe d’Élan Sport Events réunie sur la ligne d’arrivée d’un événement"
+  />
+
+  <Section labelledby="histoire-titre">
+    <div class="history">
+      <SectionHeading
+        id="histoire-titre"
+        eyebrow="Notre histoire"
+        title="Né d’une ligne de départ"
+        intro="Tout a commencé en 2014, quand Camille Martin, ancienne triathlète, a organisé une course solidaire au bord du Rhône. Face à l’enthousiasme des participants — et à l’ampleur de la logistique — elle a décidé d’en faire son métier. Dix ans plus tard, l’agence accompagne chaque année une trentaine d’événements, avec la même exigence qu’au premier jour."
+      />
+      <ol role="list" class="timeline">
+        {
+          HISTORY.map((h) => (
+            <li>
+              <p class="timeline__year">{h.year}</p>
+              <p>{h.text}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </Section>
+
+  <Section tone="muted" labelledby="valeurs-titre">
+    <SectionHeading id="valeurs-titre" eyebrow="Nos valeurs" title="Ce qui nous fait avancer" />
+    <ul role="list" class="grid grid--4 values">
+      {
+        VALUES.map((v) => (
+          <li>
+            <h3>{v.title}</h3>
+            <p>{v.text}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </Section>
+
+  <Section labelledby="equipe-titre">
+    <SectionHeading
+      id="equipe-titre"
+      eyebrow="L’équipe"
+      title="Les visages de l’agence"
+      intro="Une équipe de 8 permanents, épaulée par un réseau de coachs, arbitres, secouristes et prestataires de confiance."
+    />
+    <ul role="list" class="grid grid--4 team">
+      {
+        TEAM.map((m) => (
+          <li>
+            <span class="team__avatar" aria-hidden="true">{initials(m.name)}</span>
+            <h3>{m.name}</h3>
+            <p class="team__role">{m.role}</p>
+            <p>{m.bio}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </Section>
+
+  <CtaBanner title="Envie de travailler avec nous ?" text="Présentez-nous votre projet, nous serons ravis d’en discuter." ctaLabel="Nous contacter" />
 </BaseLayout>
+
+<style>
+  .history {
+    display: grid;
+    gap: var(--space-7);
+  }
+  .history :global(.section-heading) {
+    margin-bottom: 0;
+  }
+  @media (min-width: 64rem) {
+    .history {
+      grid-template-columns: 1.1fr 1fr;
+    }
+  }
+  .timeline {
+    display: grid;
+    gap: var(--space-5);
+    border-left: 3px solid var(--color-border);
+    padding-left: var(--space-5);
+  }
+  .timeline li {
+    position: relative;
+  }
+  .timeline li::before {
+    content: '';
+    position: absolute;
+    left: calc(-1 * var(--space-5) - 9px);
+    top: 0.3rem;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: var(--color-accent);
+    box-shadow: 0 0 0 4px var(--color-bg);
+  }
+  .timeline__year {
+    font-weight: 800;
+    font-size: var(--fs-lg);
+  }
+  .timeline li p:last-child {
+    color: var(--color-muted);
+  }
+  .values li {
+    display: grid;
+    gap: var(--space-3);
+    align-content: start;
+    padding: var(--space-5);
+    border-radius: var(--radius-lg);
+    background: var(--color-bg);
+    border-top: 4px solid var(--color-accent);
+    box-shadow: var(--shadow-sm);
+  }
+  .values p {
+    color: var(--color-muted);
+  }
+  .team li {
+    display: grid;
+    gap: var(--space-2);
+    align-content: start;
+  }
+  .team__avatar {
+    display: grid;
+    place-items: center;
+    width: 5rem;
+    height: 5rem;
+    margin-bottom: var(--space-2);
+    border-radius: 50%;
+    background: var(--color-ink);
+    color: var(--color-accent-soft);
+    font-size: var(--fs-xl);
+    font-weight: 800;
+  }
+  .team__role {
+    font-weight: 700;
+    color: var(--color-accent-strong);
+  }
+  .team li p:last-child {
+    color: var(--color-muted);
+  }
+</style>

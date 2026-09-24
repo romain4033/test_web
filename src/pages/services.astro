@@ -1,12 +1,176 @@
 ---
+import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/Hero.astro';
+import Section from '../components/Section.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import Button from '../components/Button.astro';
+import CtaBanner from '../components/CtaBanner.astro';
+import { SERVICES } from '../data/content';
+
+const steps = [
+  { title: 'Écoute', text: 'Un premier échange pour comprendre vos objectifs, votre public, vos dates et votre budget.' },
+  { title: 'Proposition', text: 'Un concept détaillé et un devis transparent sous 10 jours ouvrés.' },
+  { title: 'Préparation', text: 'Autorisations, prestataires, sécurité, communication : nous pilotons tout le rétroplanning.' },
+  { title: 'Jour J & bilan', text: 'Une équipe sur le terrain du montage au démontage, puis un bilan chiffré et photo.' },
+];
 ---
 
 <BaseLayout
   title="Nos services"
   description="Courses & trails, tournois multisports, journées sportives d’entreprise et team building : découvrez les prestations d’Élan Sport Events."
 >
-  <Hero title="Nos services" />
-  <!-- Sections (étape 3) : courses & trails, tournois multisports, journées sportives d’entreprise, team building sportif -->
+  <Hero
+    eyebrow="Nos services"
+    title="Des événements sportifs clés en main"
+    text="Quatre expertises complémentaires pour faire bouger le public, vos clients ou vos collaborateurs."
+  />
+
+  {
+    SERVICES.map((s, i) => (
+      <Section tone={i % 2 ? 'muted' : 'light'} id={s.id} labelledby={`${s.id}-titre`}>
+        <div class:list={['service', { 'service--reverse': i % 2 }]}>
+          <div class="service__media">
+            <Image
+              src={s.image}
+              alt={s.imageAlt}
+              widths={[480, 800, 1200]}
+              sizes="(min-width: 64rem) 34rem, 100vw"
+              format="webp"
+              quality={75}
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
+          <div class="service__content">
+            <p class="eyebrow">{`0${i + 1}`}</p>
+            <h2 id={`${s.id}-titre`}>{s.title}</h2>
+            <p class="lead">{s.description}</p>
+            <h3 class="service__subtitle">Ce que nous prenons en charge</h3>
+            <ul role="list" class="checklist">
+              {s.features.map((f) => <li>{f}</li>)}
+            </ul>
+            <p class="service__audience"><strong>Pour qui ?</strong> {s.audience}</p>
+            <Button href="/contact/">Parler de mon projet</Button>
+          </div>
+        </div>
+      </Section>
+    ))
+  }
+
+  <Section tone="dark" labelledby="methode-titre">
+    <SectionHeading
+      id="methode-titre"
+      eyebrow="Notre méthode"
+      title="De l’idée à la ligne d’arrivée"
+      intro="Une démarche éprouvée, quel que soit le format de votre événement."
+    />
+    <ol role="list" class="steps">
+      {
+        steps.map((step, i) => (
+          <li>
+            <span class="steps__num" aria-hidden="true">{i + 1}</span>
+            <h3>{step.title}</h3>
+            <p>{step.text}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </Section>
+
+  <CtaBanner title="Votre événement mérite le meilleur départ" text="Décrivez-nous votre projet, nous vous répondons sous 48 h." />
 </BaseLayout>
+
+<style>
+  .service {
+    display: grid;
+    gap: var(--space-7);
+    align-items: center;
+  }
+  .service__media {
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    aspect-ratio: 3 / 2;
+  }
+  .service__media :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .service__content {
+    display: grid;
+    gap: var(--space-4);
+    justify-items: start;
+  }
+  .service__subtitle {
+    margin-top: var(--space-2);
+    font-size: var(--fs-md);
+  }
+  .checklist {
+    display: grid;
+    gap: var(--space-2);
+  }
+  .checklist li {
+    position: relative;
+    padding-left: 1.75rem;
+  }
+  /* Pastille orange + coche dessinée en CSS (pas d'image data: → CSP img-src 'self') */
+  .checklist li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.3em;
+    width: 1.1rem;
+    height: 1.1rem;
+    border-radius: 50%;
+    background: var(--color-accent);
+  }
+  .checklist li::after {
+    content: '';
+    position: absolute;
+    left: 0.4rem;
+    top: calc(0.3em + 0.22rem);
+    width: 0.3rem;
+    height: 0.55rem;
+    border: solid var(--color-ink);
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+  .service__audience {
+    color: var(--color-muted);
+  }
+  .service__audience strong {
+    color: var(--color-ink);
+  }
+  @media (min-width: 64rem) {
+    .service {
+      grid-template-columns: 1fr 1fr;
+    }
+    .service--reverse .service__media {
+      order: 2;
+    }
+  }
+  .steps {
+    display: grid;
+    gap: var(--space-6);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+    counter-reset: none;
+  }
+  .steps li {
+    display: grid;
+    gap: var(--space-3);
+    align-content: start;
+  }
+  .steps__num {
+    display: grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    background: var(--color-accent);
+    color: var(--color-ink);
+    font-weight: 800;
+    font-size: var(--fs-lg);
+  }
+</style>

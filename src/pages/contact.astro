@@ -1,12 +1,98 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/Hero.astro';
+import Section from '../components/Section.astro';
+import { CONTACT } from '../data/site';
 ---
 
 <BaseLayout
   title="Contact"
   description="Contactez Élan Sport Events pour votre projet d’événement sportif : course, tournoi, journée d’entreprise ou team building. Réponse sous 48 h."
 >
-  <Hero title="Contactez-nous" />
-  <!-- Formulaire sécurisé (étape 4) + coordonnées -->
+  <Hero
+    eyebrow="Contact"
+    title="Parlons de votre projet"
+    text="Quelques lignes suffisent pour commencer : nous revenons vers vous sous 48 h ouvrées."
+  />
+
+  <Section labelledby="formulaire-titre">
+    <div class="contact">
+      <div class="contact__form">
+        <h2 id="formulaire-titre">Envoyez-nous un message</h2>
+        <!-- Formulaire sécurisé : étape 4 -->
+        <p class="placeholder">Le formulaire de contact sécurisé sera ajouté à l’étape 4.</p>
+      </div>
+
+      <aside class="contact__info" aria-labelledby="coordonnees-titre">
+        <h2 id="coordonnees-titre">Nos coordonnées</h2>
+        <dl>
+          <div>
+            <dt>Adresse</dt>
+            <dd>
+              <address>{CONTACT.addressLine1}<br />{CONTACT.addressLine2}</address>
+            </dd>
+          </div>
+          <div>
+            <dt>Téléphone</dt>
+            <dd><a href={`tel:${CONTACT.phoneHref}`}>{CONTACT.phone}</a></dd>
+          </div>
+          <div>
+            <dt>E-mail</dt>
+            <dd><a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a></dd>
+          </div>
+          <div>
+            <dt>Horaires</dt>
+            <dd>{CONTACT.hours}</dd>
+          </div>
+        </dl>
+      </aside>
+    </div>
+  </Section>
 </BaseLayout>
+
+<style>
+  .contact {
+    display: grid;
+    gap: var(--space-7);
+  }
+  @media (min-width: 64rem) {
+    .contact {
+      grid-template-columns: 1.6fr 1fr;
+      align-items: start;
+    }
+  }
+  .contact h2 {
+    font-size: var(--fs-xl);
+    margin-bottom: var(--space-5);
+  }
+  .placeholder {
+    padding: var(--space-6);
+    border: 2px dashed var(--color-border);
+    border-radius: var(--radius-lg);
+    color: var(--color-muted);
+  }
+  .contact__info {
+    padding: var(--space-6);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+    border-top: 4px solid var(--color-accent);
+  }
+  .contact__info dl {
+    display: grid;
+    gap: var(--space-5);
+  }
+  .contact__info dt {
+    font-size: var(--fs-sm);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+  .contact__info dd {
+    margin: var(--space-1) 0 0;
+    font-weight: 600;
+  }
+  .contact__info address {
+    font-style: normal;
+  }
+</style>

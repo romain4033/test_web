@@ -209,3 +209,17 @@ a:hover {
   background: linear-gradient(transparent 62%, var(--color-accent) 62%, var(--color-accent) 90%, transparent 90%);
   padding-inline: 0.08em;
 }
+/* Grille pour 4 éléments : 1 → 2 → 4 colonnes (évite un élément orphelin) */
+.grid--4 {
+  grid-template-columns: 1fr;
+}
+@media (min-width: 40rem) {
+  .grid--4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (min-width: 64rem) {
+  .grid--4 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}

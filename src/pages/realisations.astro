@@ -1,12 +1,57 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/Hero.astro';
+import Section from '../components/Section.astro';
+import Card from '../components/Card.astro';
+import CtaBanner from '../components/CtaBanner.astro';
+import { REALISATIONS } from '../data/content';
 ---
 
 <BaseLayout
   title="Réalisations"
   description="Retour en images sur les événements sportifs organisés par Élan Sport Events : trails, tournois, séminaires sportifs et challenges d’entreprise."
 >
-  <Hero title="Nos réalisations" />
-  <!-- Grille d’événements passés (étape 3) : photo, titre, courte description -->
+  <Hero
+    eyebrow="Réalisations"
+    title="Nos derniers événements"
+    text="Courses, tournois, journées d’entreprise et team buildings : quelques projets dont nous sommes fiers."
+  />
+
+  <Section labelledby="liste-titre">
+    <h2 id="liste-titre" class="visually-hidden">Liste des événements</h2>
+    <ul role="list" class="grid">
+      {
+        REALISATIONS.map((r) => (
+          <li>
+            <Card tag={r.category} title={r.title} text={r.description} image={r.image} imageAlt={r.imageAlt}>
+              <p class="meta">
+                <span>{r.date}</span>
+                <span aria-hidden="true">·</span>
+                <span>{r.location}</span>
+              </p>
+            </Card>
+          </li>
+        ))
+      }
+    </ul>
+  </Section>
+
+  <CtaBanner title="Et si votre événement était le prochain ?" text="Racontez-nous votre projet, nous nous occupons du reste." />
 </BaseLayout>
+
+<style>
+  .grid > li {
+    display: flex;
+  }
+  .grid > li > :global(.card) {
+    flex: 1;
+  }
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--color-ink);
+  }
+</style>
