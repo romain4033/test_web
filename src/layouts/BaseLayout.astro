@@ -1,5 +1,8 @@
 ---
-import { SITE, NAV_LINKS, LEGAL_LINKS } from '../data/site';
+import { SITE } from '../data/site';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/global.css';
 
 interface Props {
   /** Titre unique de la page (sans le nom du site). */
@@ -18,7 +21,6 @@ const { title, description = SITE.defaultDescription, ogImage = '/og-default.jpg
 const fullTitle = Astro.url.pathname === '/' ? `${SITE.name} — ${SITE.tagline}` : `${title} | ${SITE.name}`;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const ogImageUrl = new URL(ogImage, Astro.site);
-const currentPath = Astro.url.pathname;
 ---
 
 <!doctype html>
@@ -26,6 +28,7 @@ const currentPath = Astro.url.pathname;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#111827" />
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
@@ -47,34 +50,12 @@ const currentPath = Astro.url.pathname;
   <body>
     <a class="skip-link" href="#contenu">Aller au contenu</a>
 
-    <header class="site-header">
-      <a class="logo" href="/">{SITE.name}</a>
-      <nav aria-label="Navigation principale">
-        <ul>
-          {
-            NAV_LINKS.map((link) => (
-              <li>
-                <a href={link.href} aria-current={currentPath === link.href ? 'page' : undefined}>
-                  {link.label}
-                </a>
-              </li>
-            ))
-          }
-        </ul>
-      </nav>
-    </header>
+    <Header />
 
     <main id="contenu" tabindex="-1">
       <slot />
     </main>
 
-    <footer class="site-footer">
-      <p>© {new Date().getFullYear()} {SITE.name}</p>
-      <nav aria-label="Liens légaux">
-        <ul>
-          {LEGAL_LINKS.map((link) => <li><a href={link.href}>{link.label}</a></li>)}
-        </ul>
-      </nav>
-    </footer>
+    <Footer />
   </body>
 </html>

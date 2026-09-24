@@ -1,0 +1,72 @@
+---
+import Button from './Button.astro';
+
+interface Props {
+  title: string;
+  text?: string;
+  ctaLabel?: string;
+  ctaHref?: string;
+}
+const {
+  title,
+  text,
+  ctaLabel = 'Parlons de votre projet',
+  ctaHref = '/contact/',
+} = Astro.props;
+---
+
+<section class="cta on-dark" aria-labelledby="cta-title">
+  <div class="container cta__inner">
+    <div class="cta__content">
+      <h2 id="cta-title">{title}</h2>
+      {text && <p>{text}</p>}
+    </div>
+    <Button href={ctaHref} size="lg">{ctaLabel}</Button>
+  </div>
+</section>
+
+<style>
+  .cta {
+    position: relative;
+    overflow: hidden;
+    padding-block: var(--space-8);
+    background: var(--color-ink);
+    color: var(--color-on-dark);
+  }
+  /* Bandes diagonales dynamiques (décoratives) */
+  .cta::before {
+    content: '';
+    position: absolute;
+    inset: -50% -10% auto auto;
+    width: 60%;
+    height: 200%;
+    background: repeating-linear-gradient(
+      -60deg,
+      rgb(255 107 26 / 0.18) 0 18px,
+      transparent 18px 44px
+    );
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 60%);
+    mask-image: linear-gradient(to right, transparent, #000 60%);
+    pointer-events: none;
+  }
+  .cta__inner {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-6);
+  }
+  .cta__content {
+    display: grid;
+    gap: var(--space-3);
+    max-width: 38rem;
+  }
+  .cta h2 {
+    font-size: var(--fs-2xl);
+  }
+  .cta p {
+    color: var(--color-on-dark-muted);
+    font-size: var(--fs-md);
+  }
+</style>

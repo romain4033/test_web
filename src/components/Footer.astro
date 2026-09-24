@@ -1,0 +1,99 @@
+---
+import { SITE, NAV_LINKS, LEGAL_LINKS, CONTACT } from '../data/site';
+import Logo from './Logo.astro';
+---
+
+<footer class="site-footer on-dark">
+  <div class="container site-footer__grid">
+    <div class="site-footer__brand">
+      <Logo />
+      <p>{SITE.tagline}. Courses, tournois, journées d’entreprise et team building partout en France.</p>
+    </div>
+
+    <nav aria-labelledby="footer-nav-title">
+      <h2 id="footer-nav-title" class="site-footer__title">Navigation</h2>
+      <ul role="list">
+        {NAV_LINKS.map((link) => <li><a href={link.href}>{link.label}</a></li>)}
+      </ul>
+    </nav>
+
+    <div>
+      <h2 class="site-footer__title">Contact</h2>
+      <address>
+        <ul role="list">
+          <li>{CONTACT.addressLine1}<br />{CONTACT.addressLine2}</li>
+          <li><a href={`tel:${CONTACT.phoneHref}`}>{CONTACT.phone}</a></li>
+          <li><a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a></li>
+        </ul>
+      </address>
+    </div>
+  </div>
+
+  <div class="container site-footer__bottom">
+    <p>© {new Date().getFullYear()} {SITE.name}. Tous droits réservés.</p>
+    <nav aria-label="Informations légales">
+      <ul role="list">
+        {LEGAL_LINKS.map((link) => <li><a href={link.href}>{link.label}</a></li>)}
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background: var(--color-ink);
+    color: var(--color-on-dark);
+    padding-top: var(--space-8);
+    border-top: 6px solid var(--color-accent);
+  }
+  .site-footer__grid {
+    display: grid;
+    gap: var(--space-7);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+    padding-bottom: var(--space-7);
+  }
+  .site-footer p,
+  .site-footer address {
+    color: var(--color-on-dark-muted);
+    font-style: normal;
+  }
+  .site-footer__brand {
+    display: grid;
+    gap: var(--space-4);
+    max-width: 22rem;
+  }
+  .site-footer__title {
+    margin-bottom: var(--space-4);
+    font-size: var(--fs-sm);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-accent-soft);
+  }
+  .site-footer ul {
+    display: grid;
+    gap: var(--space-2);
+  }
+  .site-footer a {
+    color: var(--color-on-dark);
+    text-decoration-color: rgb(255 255 255 / 0.4);
+  }
+  .site-footer a:hover {
+    color: var(--color-accent-soft);
+    text-decoration-color: currentColor;
+  }
+  .site-footer__bottom {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--space-3);
+    padding-block: var(--space-5);
+    border-top: 1px solid rgb(255 255 255 / 0.12);
+    font-size: var(--fs-sm);
+  }
+  .site-footer__bottom ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2) var(--space-5);
+  }
+</style>

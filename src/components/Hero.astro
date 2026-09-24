@@ -1,0 +1,119 @@
+---
+import type { ImageMetadata } from 'astro';
+import { Image } from 'astro:assets';
+
+interface Props {
+  eyebrow?: string;
+  /** Titre simple ; pour mettre un mot en valeur, utiliser plutôt le slot « title ». */
+  title?: string;
+  text?: string;
+  image?: ImageMetadata;
+  imageAlt?: string;
+  size?: 'home' | 'page';
+}
+const { eyebrow, title, text, image, imageAlt = '', size = 'page' } = Astro.props;
+---
+
+<section class:list={['hero', `hero--${size}`, 'on-dark', { 'hero--image': image }]}>
+  {
+    image && (
+      <Image
+        class="hero__bg"
+        src={image}
+        alt={imageAlt}
+        widths={[640, 1024, 1600, 2000]}
+        sizes="100vw"
+        format="webp"
+        quality={70}
+        loading="eager"
+        fetchpriority="high"
+      />
+    )
+  }
+  <div class="container hero__inner">
+    {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+    <h1>{title}<slot name="title" /></h1>
+    {text && <p class="hero__text">{text}</p>}
+    {
+      Astro.slots.has('default') && (
+        <div class="hero__actions">
+          <slot />
+        </div>
+      )
+    }
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    isolation: isolate;
+    display: grid;
+    align-items: end;
+    overflow: hidden;
+    background: var(--color-ink);
+    color: var(--color-on-dark);
+  }
+  .hero--home {
+    min-height: min(88vh, 48rem);
+    padding-block: var(--space-9) var(--space-8);
+  }
+  .hero--page {
+    min-height: 20rem;
+    padding-block: var(--space-8) var(--space-7);
+  }
+  /* Motif dynamique quand il n'y a pas de photo */
+  .hero:not(.hero--image)::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background:
+      radial-gradient(circle at 85% 20%, rgb(255 107 26 / 0.45), transparent 45%),
+      repeating-linear-gradient(-60deg, rgb(255 255 255 / 0.04) 0 2px, transparent 2px 28px);
+  }
+  .hero__bg {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  /* Voile sombre garantissant le contraste du texte sur la photo */
+  .hero--image::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(
+      to top,
+      rgb(17 24 39 / 0.92) 0%,
+      rgb(17 24 39 / 0.65) 45%,
+      rgb(17 24 39 / 0.3) 100%
+    );
+  }
+  .hero__inner {
+    display: grid;
+    gap: var(--space-5);
+    justify-items: start;
+  }
+  .hero h1 {
+    max-width: 18ch;
+  }
+  .hero--page h1 {
+    font-size: var(--fs-2xl);
+    max-width: 24ch;
+  }
+  .hero__text {
+    max-width: 38rem;
+    font-size: var(--fs-md);
+    color: var(--color-on-dark-muted);
+  }
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-top: var(--space-2);
+  }
+</style>

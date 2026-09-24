@@ -1,0 +1,41 @@
+---
+interface Props {
+  tone?: 'light' | 'muted' | 'dark' | 'accent';
+  id?: string;
+  narrow?: boolean;
+  /** id du titre de section, pour aria-labelledby */
+  labelledby?: string;
+}
+const { tone = 'light', id, narrow = false, labelledby } = Astro.props;
+---
+
+<section
+  id={id}
+  aria-labelledby={labelledby}
+  class:list={['section', `section--${tone}`, { 'on-dark': tone === 'dark' }]}
+>
+  <div class:list={['container', { 'container--narrow': narrow }]}>
+    <slot />
+  </div>
+</section>
+
+<style>
+  .section {
+    padding-block: var(--section-y);
+  }
+  .section--muted {
+    background: var(--color-surface);
+  }
+  .section--dark {
+    background: var(--color-ink);
+    color: var(--color-on-dark);
+  }
+  .section--dark :global(.lead),
+  .section--dark :global(p) {
+    color: var(--color-on-dark-muted);
+  }
+  .section--accent {
+    background: var(--color-accent);
+    color: var(--color-ink);
+  }
+</style>

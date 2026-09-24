@@ -1,9 +1,13 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Section from '../components/Section.astro';
+import Hero from '../components/Hero.astro';
 ---
 
 <BaseLayout title="Page introuvable" description="La page demandée n’existe pas ou a été déplacée." noindex>
-  <h1>Page introuvable</h1>
-  <p>La page que vous cherchez n’existe pas ou a été déplacée.</p>
-  <p><a href="/">Retour à l’accueil</a></p>
+  <Hero title="Page introuvable" />
+  <Section narrow>
+    <p class="lead">La page que vous cherchez n’existe pas ou a été déplacée.</p>
+    <p><a href="/">Retour à l’accueil</a></p>
+  </Section>
 </BaseLayout>

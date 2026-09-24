@@ -23,8 +23,8 @@ export default defineConfig({
   },
   integrations: [
     sitemap({
-      // Pas de page 404 dans le sitemap.
-      filter: (page) => !page.includes('/404'),
+      // Pages exclues du sitemap (404, démonstration du design system).
+      filter: (page) => !page.includes('/404') && !page.includes('/styleguide'),
     }),
   ],
 });

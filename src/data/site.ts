@@ -20,3 +20,12 @@ export const LEGAL_LINKS = [
   { href: '/mentions-legales/', label: 'Mentions légales' },
   { href: '/confidentialite/', label: 'Politique de confidentialité' },
 ] as const;
+
+// Coordonnées provisoires (à remplacer).
+export const CONTACT = {
+  email: 'contact@exemple-agence.fr',
+  phone: '04 00 00 00 00',
+  phoneHref: '+33400000000',
+  addressLine1: '12 rue du Stade',
+  addressLine2: '69000 Lyon',
+} as const;

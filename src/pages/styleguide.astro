@@ -1,0 +1,125 @@
+---
+// Page de démonstration du design system (non indexée, exclue du sitemap).
+// À supprimer avant la mise en production (étape 6).
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import Section from '../components/Section.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import Button from '../components/Button.astro';
+import Card from '../components/Card.astro';
+import Stat from '../components/Stat.astro';
+import StatList from '../components/StatList.astro';
+import CtaBanner from '../components/CtaBanner.astro';
+
+const colors = [
+  { name: 'Accent', token: '--color-accent', hex: '#FF6B1A', note: 'Boutons, soulignements, décor' },
+  { name: 'Accent fort', token: '--color-accent-strong', hex: '#C2410C', note: 'Liens et texte d’accent sur fond clair' },
+  { name: 'Accent doux', token: '--color-accent-soft', hex: '#FB923C', note: 'Texte d’accent sur fond sombre' },
+  { name: 'Encre', token: '--color-ink', hex: '#111827', note: 'Texte, sections sombres' },
+  { name: 'Gris texte', token: '--color-muted', hex: '#4B5563', note: 'Texte secondaire' },
+  { name: 'Surface', token: '--color-surface', hex: '#F8F7F4', note: 'Sections alternées' },
+];
+---
+
+<BaseLayout title="Design system" description="Démonstration des composants du site." noindex>
+  <Hero size="home" eyebrow="Design system" text="Accroche courte et percutante, suivie d’un sous-titre qui explique la promesse de l’agence en une ou deux lignes.">
+    <Fragment slot="title">Des événements qui font <span class="highlight">vibrer</span> vos équipes</Fragment>
+    <Button href="/contact/" size="lg">Demander un devis</Button>
+    <Button href="/services/" variant="ghost" size="lg">Nos services</Button>
+  </Hero>
+
+  <Section labelledby="sg-couleurs">
+    <SectionHeading id="sg-couleurs" eyebrow="Fondations" title="Palette de couleurs" intro="Orange vif énergique sur fond clair. Tous les couples texte/fond respectent le niveau WCAG AA." />
+    <ul role="list" class="grid swatches">
+      {
+        colors.map((c) => (
+          <li class="swatch">
+            <span class:list={['swatch__chip', `swatch__chip--${c.token.slice(8)}`]} />
+            <strong>{c.name}</strong>
+            <code>{c.hex}</code>
+            <span class="swatch__note">{c.note}</span>
+          </li>
+        ))
+      }
+    </ul>
+  </Section>
+
+  <Section tone="muted" labelledby="sg-typo">
+    <SectionHeading id="sg-typo" eyebrow="Fondations" title="Typographie : Inter" intro="Police variable auto-hébergée (aucun appel à un CDN externe), titres en graisse 800 serrés, corps de texte aéré." />
+    <div class="stack">
+      <p class="type-sample type-sample--h1">Titre H1 — 72px max</p>
+      <h3>Titre H3 — sous-sections et cartes</h3>
+      <p class="lead">Texte d’introduction (lead) : légèrement plus grand et plus doux pour accrocher la lecture.</p>
+      <p>Corps de texte standard à 16px avec un interlignage généreux pour le confort de lecture sur mobile. <a href="/styleguide/">Exemple de lien</a> dans un paragraphe.</p>
+    </div>
+  </Section>
+
+  <Section labelledby="sg-boutons">
+    <SectionHeading id="sg-boutons" eyebrow="Composants" title="Boutons" />
+    <div class="row">
+      <Button>Principal</Button>
+      <Button variant="secondary">Secondaire</Button>
+      <Button variant="ghost">Contour</Button>
+      <Button size="lg">Grand format</Button>
+    </div>
+  </Section>
+
+  <Section tone="muted" labelledby="sg-cartes">
+    <SectionHeading id="sg-cartes" eyebrow="Composants" title="Cartes" intro="Les cartes accueilleront les photos d’action (WebP, lazy-loading) à l’étape 3." />
+    <div class="grid">
+      <Card tag="Courses & trails" title="Trail des Crêtes 2025" text="850 coureurs, 3 parcours balisés, ravitaillements et chronométrage électronique." href="/realisations/" />
+      <Card tag="Entreprise" title="Journée sportive Groupe Horizon" text="400 collaborateurs, 12 ateliers sportifs et une finale en relais." href="/realisations/" />
+      <Card tag="Team building" title="Raid multisport en équipe" text="Kayak, VTT et course d’orientation pour souder un comité de direction." href="/realisations/" />
+    </div>
+  </Section>
+
+  <Section tone="dark" labelledby="sg-chiffres">
+    <SectionHeading id="sg-chiffres" eyebrow="Composants" title="Chiffres clés" />
+    <StatList>
+      <Stat value="12 ans" label="d’expérience" />
+      <Stat value="350+" label="événements organisés" />
+      <Stat value="80 000" label="participants accueillis" />
+      <Stat value="98 %" label="de clients satisfaits" />
+    </StatList>
+  </Section>
+
+  <CtaBanner title="Un projet d’événement sportif ?" text="Parlez-nous de vos objectifs : nous revenons vers vous sous 48 h avec une première proposition." />
+</BaseLayout>
+
+<style>
+  .type-sample--h1 {
+    font-size: var(--fs-3xl);
+    font-weight: 800;
+    line-height: var(--lh-tight);
+    letter-spacing: -0.035em;
+  }
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    align-items: center;
+  }
+  .swatches {
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 13rem), 1fr));
+  }
+  .swatch {
+    display: grid;
+    gap: var(--space-1);
+  }
+  .swatch__chip {
+    height: 5rem;
+    margin-bottom: var(--space-2);
+    border-radius: var(--radius);
+    border: 1px solid var(--color-border);
+  }
+  .swatch__chip--accent { background: var(--color-accent); }
+  .swatch__chip--accent-strong { background: var(--color-accent-strong); }
+  .swatch__chip--accent-soft { background: var(--color-accent-soft); }
+  .swatch__chip--ink { background: var(--color-ink); }
+  .swatch__chip--muted { background: var(--color-muted); }
+  .swatch__chip--surface { background: var(--color-surface); }
+  .swatch__note {
+    font-size: var(--fs-sm);
+    color: var(--color-muted);
+  }
+</style>

@@ -1,0 +1,13 @@
+---
+// Conteneur <dl> pour les composants <Stat>.
+---
+
+<dl class="stat-list"><slot /></dl>
+
+<style>
+  .stat-list {
+    display: grid;
+    gap: var(--space-6);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
+  }
+</style>
